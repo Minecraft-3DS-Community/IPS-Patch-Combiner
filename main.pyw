@@ -6,7 +6,8 @@ from tkinter import filedialog
 patchList = []
 
 def combinePatches(patchList: list):
-    with open('code_combined.ips', 'wb') as outF:
+    outputFilePath = filedialog.asksaveasfilename(defaultextension=".ips", filetypes=[("IPS Patch Files", "*.ips"), ("All Files", "*.*")], title="Save IPS Patch As")
+    with open(outputFilePath, 'wb') as outF:
         outF.write(b'PATCH')
         for patch in patchList:
             with open(patch, 'rb') as f:
@@ -17,7 +18,7 @@ def combinePatches(patchList: list):
     result_label.configure(text="Patches Combined Successfully!", text_color="green")
 
 def addPatchFile():
-    files = filedialog.askopenfilenames(title="Select Patch Files", filetypes=(("IPS Files", "*.ips"), ("All Files", "*.*")))
+    files = filedialog.askopenfilenames(title="Select Patch Files", filetypes=(("IPS Patch Files", "*.ips"), ("All Files", "*.*")))
     for file in files:
         patchList.append(file)
     
