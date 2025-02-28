@@ -1,6 +1,6 @@
 # IPS-Patch-Combiner
 - A GUI for IPS Patches, and Management of ROMHACKS.
-- Patch ROMS, Create, Merge, and Parse your ROM Patches.
+- Patch ROMS, Create, Combine/Merge, and Parse your ROM Patches.
 
 ## GUI-Usage:
 - Install customtkinter with `pip install customtkinter`.
