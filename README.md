@@ -7,7 +7,7 @@
 - Install customtkinter with `pip install customtkinter`.
 - Run the `gui.pyw` file, and select as many patches as you want to combine.
 
-## CLI-Usage:
+### CLI-Usage:
 - Takes an unlimited amount of patches and combines them into one patch.
 - Run the `cli.py` with the following arguments.
 ```
