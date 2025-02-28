@@ -1,7 +1,7 @@
 # IPS-Patch-Combiner
 - A GUI for IPS Patches, and Management of ROMHACKS.
 - Patch ROMS, Create, Combine/Merge, and Parse your ROM Patches.
-- Download [Here](https://github.com/Minecraft-3DS-Community/IPS-Patch-Tool/releases/download/v1.0/IPS-Patch-Tool.exe).
+- Download Compiled Binary [Here](https://github.com/Minecraft-3DS-Community/IPS-Patch-Tool/releases/download/v1.0/IPS-Patch-Tool.exe).
 
 ## GUI-Usage:
 - Install customtkinter with `pip install customtkinter`.
