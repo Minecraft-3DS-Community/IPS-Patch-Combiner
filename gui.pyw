@@ -80,6 +80,7 @@ def addPatchFile():
         patchList.append(file)
 
     patch_names = [os.path.basename(file) for file in patchList]
+    combineButtonClick()
 
 def combineButtonClick():
     if len(patchList) > 1:
@@ -216,7 +217,7 @@ create_patch_button.pack(pady=5)
 apply_patch_button = ctk.CTkButton(app, text="Apply IPS Patch", command=select_files_for_patch_application)
 apply_patch_button.pack(pady=5)
 
-combine_button = ctk.CTkButton(app, text="Combine IPS Patches", command=combineButtonClick)
+combine_button = ctk.CTkButton(app, text="Combine IPS Patches", command=addPatchFile)
 combine_button.pack(pady=5)
 
 parse_button = ctk.CTkButton(app, text="Parse IPS Patches", command=parse_ips_patch)
