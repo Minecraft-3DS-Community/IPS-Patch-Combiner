@@ -3,62 +3,55 @@ from tkinter import filedialog, simpledialog, messagebox
 import os, json
 
 def parse_ips_patch():
-    file_path = filedialog.askopenfilename(title="Select Patch Files", filetypes=(("IPS Patch Files", "*.ips"), ("All Files", "*.*")))
-    if not file_path:
+    filePath = filedialog.askopenfilename(title="Select Patch Files", filetypes=(("IPS Patch Files", "*.ips"), ("All Files", "*.*")))
+    if not filePath:
         status_label.configure(text="Operation Aborted.")
         return
     
-    with open(file_path, "rb") as f:
-        data = f.read()
-
-    if not data.startswith(b"PATCH"):
-        status_label.configure(text="Invalid IPS Patch.")
-        return
-
-    index = 5
-    patches = []
-    while index < len(data) - 3: 
-        offset = int.from_bytes(data[index:index+3], byteorder='big')
-        index += 3
-        size = int.from_bytes(data[index:index+2], byteorder='big')
-        index += 2
-        if size == 0:
-            rle_size = int.from_bytes(data[index:index+2], byteorder='big')
-            index += 2
-            rle_value = data[index]
-            index += 1
-
-            patches.append({
-                "offset": offset,
-                "size": rle_size,
-                "values": [rle_value] * rle_size, 
-                "rle": True
-            })
-        else:
-            patch_values = list(data[index:index+size])
-            index += size
-
-            patches.append({
-                "offset": offset,
-                "size": size,
-                "values": patch_values,
-                "rle": False
-            })
-
-    if data[-3:] != b"EOF":
-        status_label.configure(text="Invalid IPS Patch.")
-        return
-
+    jsonDict = {"Patches": []}
+    magicStartingBytes = b"PATCH"
+    magicEndingBytes = b"EOF"
+    with open(filePath, 'rb') as f:
+        patchData = f.read()
+        if not patchData.startswith(magicStartingBytes) or magicEndingBytes not in patchData:
+            jsonDict["PatchValid"] = False
+            return jsonDict
+        
+        jsonDict["PatchValid"] = True
+        index = 5
+        while index < len(patchData) - 3:
+            if patchData[index:index+3] == magicEndingBytes:
+                break
+            
+            offset = int.from_bytes(patchData[index:index+3], "big")
+            size = int.from_bytes(patchData[index+3:index+5], "big")
+            index += 5
+            if size == 0:
+                rle_size = int.from_bytes(patchData[index:index+2], "big")
+                rle_byte = patchData[index+2]
+                index += 3
+                jsonDict["Patches"].append({
+                    "Offset": hex(offset),
+                    "Size": rle_size,
+                    "Data": hex(rle_byte)
+                })
+            else:
+                data = patchData[index:index+size]
+                index += size
+                jsonDict["Patches"].append({
+                    "Offset": hex(offset),
+                    "Size": size,
+                    "Data": data.hex()
+                })
+    
     jsonFile = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("Text JSON Files", "*.json"), ("All Files", "*.*")], title="Save JSON As")
     if not jsonFile:
         status_label.configure(text="Operation Aborted.")
         return
 
     with open(jsonFile, "w", encoding="utf-8") as json_out:
-        json.dump(patches, json_out, indent=4)
-
-    status_label.configure(text=f"Text JSON File created: {jsonFile}")
-    return patches
+        json.dump(jsonDict, json_out, indent=4)
+    return jsonDict
 
 patchList = []
 
