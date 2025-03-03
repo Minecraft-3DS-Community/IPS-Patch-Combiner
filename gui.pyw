@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter import filedialog, simpledialog, messagebox
+from tkinter import filedialog, messagebox
 import os, json
 
 def parse_ips_patch():
@@ -15,6 +15,7 @@ def parse_ips_patch():
         patchData = f.read()
         if not patchData.startswith(magicStartingBytes) or magicEndingBytes not in patchData:
             jsonDict["PatchValid"] = False
+            status_label.configure(text="Invalid IPS Patch.")
             return jsonDict
         
         jsonDict["PatchValid"] = True
@@ -51,6 +52,7 @@ def parse_ips_patch():
 
     with open(jsonFile, "w", encoding="utf-8") as json_out:
         json.dump(jsonDict, json_out, indent=4)
+        status_label.configure(text=f"JSON Text File created {json_out}")
     return jsonDict
 
 patchList = []
@@ -127,7 +129,7 @@ def apply_ips_patch(rom_file, patch_file, output_file):
         patch_data = f.read()
 
     if not patch_data.startswith(b"PATCH") or not patch_data.endswith(b"EOF"):
-        status_label.configure(text="Invalid IPS patch.")
+        status_label.configure(text="Invalid IPS Patch.")
         return
 
     index = 5
